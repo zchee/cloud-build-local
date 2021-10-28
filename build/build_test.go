@@ -39,7 +39,7 @@ import (
 	"github.com/GoogleCloudPlatform/cloud-build-local/runner"
 	"github.com/spf13/afero"
 	"golang.org/x/oauth2"
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 
 	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
 )
@@ -1236,7 +1236,7 @@ func TestExtractGCSBucket(t *testing.T) {
 func TestPushArtifacts(t *testing.T) {
 	ctx := context.Background()
 	newUUID = func() string { return "someuuid" }
-	defer func() { newUUID = uuid.New }()
+	defer func() { newUUID = uuid.NewString }()
 	buildID := "buildID"
 
 	testCases := []struct {
@@ -1386,7 +1386,7 @@ func TestPushArtifactsTiming(t *testing.T) {
 func TestPushAllTiming(t *testing.T) {
 	ctx := context.Background()
 	newUUID = func() string { return "someuuid" }
-	defer func() { newUUID = uuid.New }()
+	defer func() { newUUID = uuid.NewString }()
 
 	testCases := []struct {
 		name         string

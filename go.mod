@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.97.0
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/golang/protobuf v1.5.2
-	github.com/pborman/uuid v1.2.1
+	github.com/google/uuid v1.3.0
 	github.com/spf13/afero v1.6.0
 	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
 	google.golang.org/api v0.59.0
@@ -16,7 +16,6 @@ require (
 
 require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
-	github.com/google/uuid v1.1.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.1.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	go.opencensus.io v0.23.0 // indirect

@@ -45,7 +45,7 @@ import (
 	"github.com/spf13/afero"
 	"google.golang.org/api/cloudkms/v1"
 	"golang.org/x/oauth2"
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 )
 
 const (
@@ -458,7 +458,7 @@ func (b *Build) SetDockerAccessToken(ctx context.Context, tok string) error {
 	// Simply run an osImage container with $HOME mounted that writes the ~/.docker/config.json file.
 	var buf bytes.Buffer
 	args := []string{"docker", "run",
-		"--name", fmt.Sprintf("cloudbuild_set_docker_token_%s", uuid.New()),
+		"--name", fmt.Sprintf("cloudbuild_set_docker_token_%s", uuid.NewString()),
 		"--rm",
 		// Mount in the home volume.
 		"--volume", homeVolume + ":" + homeDir,
@@ -505,7 +505,7 @@ func (b *Build) UpdateDockerAccessToken(ctx context.Context, tok string) error {
 	// Simply run an osImage container with $HOME mounted that runs the sed script.
 	var buf bytes.Buffer
 	args := []string{"docker", "run",
-		"--name", fmt.Sprintf("cloudbuild_update_docker_token_%s", uuid.New()),
+		"--name", fmt.Sprintf("cloudbuild_update_docker_token_%s", uuid.NewString()),
 		"--rm",
 		// Mount in the home volume.
 		"--volume", homeVolume + ":" + homeDir,
@@ -551,7 +551,7 @@ func (b *Build) imageIsLocal(ctx context.Context, tag string) bool {
 func (b *Build) dockerPull(ctx context.Context, tag string, outWriter, errWriter io.Writer) (string, error) {
 	// Pull from within a container with $HOME mounted.
 	args := []string{"docker", "run",
-		"--name", fmt.Sprintf("cloudbuild_docker_pull_%s", uuid.New()),
+		"--name", fmt.Sprintf("cloudbuild_docker_pull_%s", uuid.NewString()),
 		"--rm",
 		// Mount in the home volume.
 		"--volume", homeVolume + ":" + homeDir,
@@ -656,7 +656,7 @@ func (b *Build) dockerPushWithRetries(ctx context.Context, tag string, attempt i
 
 	// Push from within a container with $HOME mounted.
 	args := []string{"docker", "run",
-		"--name", fmt.Sprintf("cloudbuild_docker_push_%s", uuid.New()),
+		"--name", fmt.Sprintf("cloudbuild_docker_push_%s", uuid.NewString()),
 		"--rm",
 		// Mount in the home volume.
 		"--volume", homeVolume + ":" + homeDir,
@@ -758,7 +758,7 @@ func (b *Build) dockerPush(ctx context.Context, tag string) ([]imageDigest, erro
 
 // runWithScrapedLogging executes the command and returns the output (stdin, stderr), with logging.
 func (b *Build) runWithScrapedLogging(ctx context.Context, logPrefix string, cmd []string) (string, error) {
-	
+
 	var buf bytes.Buffer
 	outWriter := io.MultiWriter(b.Log.MakeWriter(logPrefix+":STDOUT", -1, true), &buf)
 	errWriter := io.MultiWriter(b.Log.MakeWriter(logPrefix+":STDERR", -1, false), &buf)
@@ -768,7 +768,7 @@ func (b *Build) runWithScrapedLogging(ctx context.Context, logPrefix string, cmd
 
 // runAndScrape executes the command and returns the output (stdin, stderr), without logging.
 func (b *Build) runAndScrape(ctx context.Context, cmd []string) (string, error) {
-	
+
 	var buf bytes.Buffer
 	outWriter := io.Writer(&buf)
 	errWriter := io.Writer(&buf)
@@ -866,7 +866,6 @@ func (b *Build) GetKMSClient() (kms, error) {
 		return b.Kms, nil
 	}
 
-	
 	// automatically gets (and refreshes) credentials from the metadata server
 	// when spoofing metadata works by IP. Until then, we'll just fetch the token
 	// and pass it to all HTTP requests.
@@ -905,7 +904,7 @@ func (r realKMS) Decrypt(key, enc string) (string, error) {
 func (b *Build) timeAndRunStep(ctx context.Context, idx int, waitChans []chan struct{}, done chan<- struct{}, errors chan<- error) {
 	// Wait for preceding steps to finish before executing.
 	// If a preceding step fails, the context will cancel and waiting goroutines will die.
-	
+
 	for _, ch := range waitChans {
 		select {
 		case <-ch:
@@ -1195,7 +1194,7 @@ func (b *Build) runBuildSteps(ctx context.Context) error {
 	}()
 
 	// Create all the volumes referenced by all steps and defer cleanup.
-	
+
 	allVolumes := b.Request.GetOptions().GetVolumes()
 	for _, step := range b.Request.Steps {
 		allVolumes = append(allVolumes, step.GetVolumes()...)
@@ -1306,11 +1305,11 @@ func (b *Build) dockerRunArgs(stepDir, stepOutputDir string, idx int) []string {
 		// Makes the build step easier to kill when it fails.
 		"--name", fmt.Sprintf("step_%d", idx)}
 
-		args = append(args,
-			// Make sure the container uses the correct docker daemon.
-			"--volume", "/var/run/docker.sock:/var/run/docker.sock",
-			// Run in privileged mode.
-			"--privileged")
+	args = append(args,
+		// Make sure the container uses the correct docker daemon.
+		"--volume", "/var/run/docker.sock:/var/run/docker.sock",
+		// Run in privileged mode.
+		"--privileged")
 
 	args = append(args,
 		// Mount the project workspace.
@@ -1459,7 +1458,7 @@ func extractGCSBucket(url string) string {
 	return fmt.Sprintf("gs://%s", toks[0])
 }
 
-var newUUID = uuid.New
+var newUUID = uuid.NewString
 
 // pushArtifacts pushes ArtifactObjects to a specified bucket.
 func (b *Build) pushArtifacts(ctx context.Context) error {
@@ -1469,7 +1468,7 @@ func (b *Build) pushArtifacts(ctx context.Context) error {
 
 	// Only verify that the GCS bucket exists.
 	// If they specify a directory path in the bucket that doesn't exist, gsutil will create it for them.
-	
+
 	location := b.Request.Artifacts.Objects.Location
 	bucket := extractGCSBucket(location)
 	if err := b.gsutilHelper.VerifyBucket(ctx, bucket); err != nil {

@@ -29,7 +29,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/afero"
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 )
 
 var joinedHeaders = strings.Join(csvHeaders, ",")
@@ -321,7 +321,7 @@ func checkCommands(commands []string, wantCommands []string) error {
 func TestVerifyBucket(t *testing.T) {
 	ctx := context.Background()
 	newUUID = func() string { return "someuuid" }
-	defer func() { newUUID = uuid.New }()
+	defer func() { newUUID = uuid.NewString }()
 
 	testCases := []struct {
 		name    string
@@ -459,7 +459,7 @@ func TestUploadArtifacts(t *testing.T) {
 func TestRunGsutil(t *testing.T) {
 	ctx := context.Background()
 	newUUID = func() string { return "someuuid" }
-	defer func() { newUUID = uuid.New }()
+	defer func() { newUUID = uuid.NewString }()
 
 	testCases := []struct {
 		name         string
@@ -560,7 +560,7 @@ func TestUploadArtifactsManifest(t *testing.T) {
 func TestGetGeneration(t *testing.T) {
 	ctx := context.Background()
 	newUUID = func() string { return "someuuid" }
-	defer func() { newUUID = uuid.New }()
+	defer func() { newUUID = uuid.NewString }()
 
 	testCases := []struct {
 		name      string

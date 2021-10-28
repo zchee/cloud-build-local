@@ -34,7 +34,7 @@ import (
 	"github.com/GoogleCloudPlatform/cloud-build-local/logger"
 	"github.com/GoogleCloudPlatform/cloud-build-local/runner"
 	"github.com/spf13/afero"
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 )
 
 const (
@@ -49,7 +49,7 @@ const (
 
 var (
 	// newUUID returns a new uuid string and is stubbed during testing.
-	newUUID = uuid.New
+	newUUID = uuid.NewString
 	// csvHeaders are the CSV headers of a `gsutil cp` manifest file. See https://cloud.google.com/storage/docs/gsutil/commands/cp.
 	csvHeaders = []string{"Source", "Destination", "Start", "End", "Md5", "UploadId", "Source Size", "Bytes Transferred", "Result", "Description"}
 )

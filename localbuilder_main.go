@@ -31,7 +31,7 @@ import (
 	"github.com/spf13/afero"
 	computeMetadata "cloud.google.com/go/compute/metadata"
 	"golang.org/x/oauth2"
-	"github.com/pborman/uuid"
+	"github.com/google/uuid"
 
 	"github.com/GoogleCloudPlatform/cloud-build-local/build"
 	"github.com/GoogleCloudPlatform/cloud-build-local/common"
@@ -146,7 +146,7 @@ func run(ctx context.Context, source string) error {
 		return fmt.Errorf("Error loading config file: %v", err)
 	}
 	// When the build is run locally, there will be no build ID. Assign a unique value.
-	buildConfig.Id = "localbuild_" + uuid.New()
+	buildConfig.Id = "localbuild_" + uuid.NewString()
 
 	// Get the ProjectId to feed both the build and the metadata server.
 	// This command uses a runner without dryrun to return the real project.
@@ -185,7 +185,7 @@ func run(ctx context.Context, source string) error {
 	// Create a volume, a helper container to copy the source, and defer cleaning if we're not bind mounting the source
 	// directory.
 	if volumeName == "" {
-		volumeName = fmt.Sprintf("%s%s", volumeNamePrefix, uuid.New())
+		volumeName = fmt.Sprintf("%s%s", volumeNamePrefix, uuid.NewString())
 		if !*dryRun {
 			vol := volume.New(volumeName, r)
 			if err := vol.Setup(ctx); err != nil {

@@ -26,11 +26,12 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/oauth2"
 	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
+
 	"github.com/GoogleCloudPlatform/cloud-build-local/runner"
 	"github.com/GoogleCloudPlatform/cloud-build-local/subst"
 	"github.com/GoogleCloudPlatform/cloud-build-local/validate"
-	"golang.org/x/oauth2"
 )
 
 const (

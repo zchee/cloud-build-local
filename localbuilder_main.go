@@ -28,10 +28,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/afero"
 	computeMetadata "cloud.google.com/go/compute/metadata"
-	"golang.org/x/oauth2"
 	"github.com/google/uuid"
+	"github.com/spf13/afero"
+	"golang.org/x/oauth2"
 
 	"github.com/GoogleCloudPlatform/cloud-build-local/build"
 	"github.com/GoogleCloudPlatform/cloud-build-local/common"

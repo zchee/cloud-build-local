@@ -24,8 +24,8 @@ import (
 	"testing"
 	"time"
 
-	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
 	duration "github.com/golang/protobuf/ptypes/duration"
+	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
 )
 
 const (

@@ -34,18 +34,18 @@ import (
 	"sync"
 	"time"
 
-	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
 	"github.com/golang/protobuf/ptypes"
+	"github.com/google/uuid"
+	"github.com/spf13/afero"
+	"golang.org/x/oauth2"
+	"google.golang.org/api/cloudkms/v1"
+	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
 
 	"github.com/GoogleCloudPlatform/cloud-build-local/common"
 	"github.com/GoogleCloudPlatform/cloud-build-local/gsutil"
 	"github.com/GoogleCloudPlatform/cloud-build-local/logger"
 	"github.com/GoogleCloudPlatform/cloud-build-local/runner"
 	"github.com/GoogleCloudPlatform/cloud-build-local/volume"
-	"github.com/spf13/afero"
-	"google.golang.org/api/cloudkms/v1"
-	"golang.org/x/oauth2"
-	"github.com/google/uuid"
 )
 
 const (

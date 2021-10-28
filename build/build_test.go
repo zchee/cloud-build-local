@@ -33,15 +33,15 @@ import (
 	"testing"
 	"time"
 
-	durpb "github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes"
-	"github.com/GoogleCloudPlatform/cloud-build-local/gsutil"
-	"github.com/GoogleCloudPlatform/cloud-build-local/runner"
+	durpb "github.com/golang/protobuf/ptypes/duration"
+	"github.com/google/uuid"
 	"github.com/spf13/afero"
 	"golang.org/x/oauth2"
-	"github.com/google/uuid"
-
 	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
+
+	"github.com/GoogleCloudPlatform/cloud-build-local/gsutil"
+	"github.com/GoogleCloudPlatform/cloud-build-local/runner"
 )
 
 const uuidRegex = "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12})"
@@ -192,7 +192,6 @@ func (r *mockRunner) gsutil(ctx context.Context, args []string, in io.Reader, ou
 }
 
 func (r *mockRunner) Run(ctx context.Context, args []string, in io.Reader, out, err io.Writer, _ string) error {
-	
 	r.mu.Lock()
 	r.commands = append(r.commands, strings.Join(args, " "))
 	r.mu.Unlock()
@@ -1594,7 +1593,6 @@ func TestBuildTiming(t *testing.T) {
 
 			if tc.hasError {
 				// If there is an error, just verify the order of the step timings that exist.
-				
 				// We do not need to check the WaitFor field below because the error test case has consecutive steps.
 				prevStep := buildStepTimes[0]
 				for i := 1; i < len(buildStepTimes); i++ {
@@ -1746,7 +1744,6 @@ func TestBuildTimingOutOfOrder(t *testing.T) {
 }
 
 func TestPushImagesTiming(t *testing.T) {
-	
 	timeNow = fakeTimeNow
 	defer func() { timeNow = time.Now }()
 	ctx := context.Background()
@@ -3022,4 +3019,3 @@ func TestDataRace(t *testing.T) {
 	close(starter)
 	<-b.Done // Wait for build to complete.
 }
-

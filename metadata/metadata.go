@@ -290,7 +290,7 @@ func CreateCloudbuildNetwork(ctx context.Context, r runner.Runner, subnet string
 
 func startServer(ctx context.Context, r runner.Runner, metadataImage string, iptables bool, ip, subnet string) error {
 	if err := CreateCloudbuildNetwork(ctx, r, subnet); err != nil {
-		return fmt.Errorf("Error creating network: %v", err)
+		return fmt.Errorf("error creating network: %v", err)
 	}
 
 	// Run the spoofed metadata server.
@@ -308,7 +308,7 @@ func startServer(ctx context.Context, r runner.Runner, metadataImage string, ipt
 	// Redirect requests to metadata.google.internal and the fixed metadata IP to the metadata container.
 	cmd = []string{"docker", "network", "connect", "--alias=metadata", "--alias=metadata.google.internal", "--ip=" + ip, "cloudbuild", "metadata"}
 	if err := r.Run(ctx, cmd, nil, nil, os.Stderr, ""); err != nil {
-		return fmt.Errorf("Error connecting metadata to network: %v", err)
+		return fmt.Errorf("error connecting metadata to network: %v", err)
 	}
 
 	if iptables {
@@ -323,7 +323,7 @@ func startServer(ctx context.Context, r runner.Runner, metadataImage string, ipt
 			"--to-destination", metadataHostedIP, // to our spoofed metadata container.
 		}
 		if err := r.Run(ctx, cmd, nil, os.Stdout, os.Stderr, ""); err != nil {
-			return fmt.Errorf("Error updating iptables: %v", err)
+			return fmt.Errorf("error updating iptables: %v", err)
 		}
 	}
 

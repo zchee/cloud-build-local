@@ -34,7 +34,7 @@ import (
 func Load(path string) (*pb.Build, error) {
 	configContent, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to read config file: %v", err)
+		return nil, fmt.Errorf("unable to read config file: %v", err)
 	}
 	return unmarshalBuildTemplate(configContent)
 }

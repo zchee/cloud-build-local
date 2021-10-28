@@ -123,14 +123,14 @@ func run(ctx context.Context, source string) error {
 
 	// Clean leftovers from a previous build.
 	if err := common.Clean(ctx, r); err != nil {
-		return fmt.Errorf("Error cleaning: %v", err)
+		return fmt.Errorf("error cleaning: %v", err)
 	}
 
 	// Check installed docker versions.
 	if !*dryRun {
 		dockerServerVersion, dockerClientVersion, err := dockerVersions(ctx, r)
 		if err != nil {
-			return fmt.Errorf("Error getting local docker versions: %v", err)
+			return fmt.Errorf("error getting local docker versions: %v", err)
 		}
 		if dockerServerVersion != gcbDockerVersion {
 			log.Printf("Warning: The server docker version installed (%s) is different from the one used in GCB (%s)", dockerServerVersion, gcbDockerVersion)
@@ -143,7 +143,7 @@ func run(ctx context.Context, source string) error {
 	// Load config file into a build struct.
 	buildConfig, err := config.Load(*configFile)
 	if err != nil {
-		return fmt.Errorf("Error loading config file: %v", err)
+		return fmt.Errorf("error loading config file: %v", err)
 	}
 	// When the build is run locally, there will be no build ID. Assign a unique value.
 	buildConfig.Id = "localbuild_" + uuid.NewString()
@@ -161,21 +161,21 @@ func run(ctx context.Context, source string) error {
 	if *substitutions != "" {
 		substMap, err = common.ParseSubstitutionsFlag(*substitutions)
 		if err != nil {
-			return fmt.Errorf("Error parsing substitutions flag: %v", err)
+			return fmt.Errorf("error parsing substitutions flag: %v", err)
 		}
 	}
 
 	if err = common.SubstituteAndValidate(buildConfig, substMap); err != nil {
-		return fmt.Errorf("Error merging substitutions and validating build: %v", err)
+		return fmt.Errorf("error merging substitutions and validating build: %v", err)
 	}
 
 	var volumeName string
 	if *bindMountSource {
 		if isDir, err := validate.IsDirectory(source); err != nil {
-			return fmt.Errorf("Error getting directory: %v", err)
+			return fmt.Errorf("error getting directory: %v", err)
 		} else if isDir {
 			if volumeName, err = filepath.Abs(source); err != nil {
-				return fmt.Errorf("Error getting absolute path: %v", err)
+				return fmt.Errorf("error getting absolute path: %v", err)
 			}
 		} else {
 			return fmt.Errorf("--bind-mount-source can only be used with directories")
@@ -189,17 +189,17 @@ func run(ctx context.Context, source string) error {
 		if !*dryRun {
 			vol := volume.New(volumeName, r)
 			if err := vol.Setup(ctx); err != nil {
-				return fmt.Errorf("Error creating docker volume: %v", err)
+				return fmt.Errorf("error creating docker volume: %v", err)
 			}
 			if source != "" {
 				// If the source is a directory, only copy the inner content.
 				if isDir, err := validate.IsDirectory(source); err != nil {
-					return fmt.Errorf("Error getting directory: %v", err)
+					return fmt.Errorf("error getting directory: %v", err)
 				} else if isDir {
 					source = filepath.Clean(source) + "/."
 				}
 				if err := vol.Copy(ctx, source); err != nil {
-					return fmt.Errorf("Error copying source to docker volume: %v", err)
+					return fmt.Errorf("error copying source to docker volume: %v", err)
 				}
 			}
 			defer vol.Close(ctx)
@@ -220,10 +220,10 @@ func run(ctx context.Context, source string) error {
 		// Set initial Docker credentials.
 		tok, err := gcloud.AccessToken(ctx, r)
 		if err != nil {
-			return fmt.Errorf("Error getting access token to set docker credentials: %v", err)
+			return fmt.Errorf("error getting access token to set docker credentials: %v", err)
 		}
 		if err := b.SetDockerAccessToken(ctx, tok.AccessToken); err != nil {
-			return fmt.Errorf("Error setting docker credentials: %v", err)
+			return fmt.Errorf("error setting docker credentials: %v", err)
 		}
 		b.TokenSource = oauth2.StaticTokenSource(&oauth2.Token{
 			AccessToken: tok.AccessToken,
@@ -234,13 +234,13 @@ func run(ctx context.Context, source string) error {
 		var mdTokenSetter metadataTokenSetter
 		if computeMetadata.OnGCE() {
 			if err := metadata.CreateCloudbuildNetwork(ctx, r, "172.22.0.0/16"); err != nil {
-				return fmt.Errorf("Error creating network: %v", err)
+				return fmt.Errorf("error creating network: %v", err)
 			}
 			defer metadata.CleanCloudbuildNetwork(ctx, r)
 			mdTokenSetter = nopTokenSetter{}
 		} else {
 			if err := metadata.StartLocalServer(ctx, r, metadataImageName); err != nil {
-				return fmt.Errorf("Failed to start spoofed metadata server: %v", err)
+				return fmt.Errorf("failed to start spoofed metadata server: %v", err)
 			}
 			log.Println("Started spoofed metadata server")
 			metadataUpdater := metadata.RealUpdater{Local: true}
@@ -288,7 +288,7 @@ func run(ctx context.Context, source string) error {
 	cancel() // Cease background token updates.
 
 	if b.GetStatus().BuildStatus == build.StatusError {
-		return fmt.Errorf("Build finished with ERROR status")
+		return fmt.Errorf("build finished with ERROR status")
 	}
 
 	if *dryRun {

@@ -450,7 +450,7 @@ func checkSecrets(b *pb.Build) error {
 	// Make sure global secret_env are defined once
 	for _, se := range b.GetOptions().GetSecretEnv() {
 		if _, found := usedSecretEnvs[se]; found {
-			return fmt.Errorf("Build uses global secretEnv %q more than once", se)
+			return fmt.Errorf("build uses global secretEnv %q more than once", se)
 		}
 		usedSecretEnvs[se] = struct{}{}
 	}
@@ -459,7 +459,7 @@ func checkSecrets(b *pb.Build) error {
 	for i, step := range b.Steps {
 		for _, se := range step.SecretEnv {
 			if _, found := usedSecretEnvs[se]; found {
-				return fmt.Errorf("Step %d uses the global secretEnv %q", i, se)
+				return fmt.Errorf("step %d uses the global secretEnv %q", i, se)
 			}
 		}
 	}
@@ -470,7 +470,7 @@ func checkSecrets(b *pb.Build) error {
 		for _, se := range step.SecretEnv {
 			usedSecretEnvs[se] = struct{}{}
 			if _, found := thisStepSecretEnvs[se]; found {
-				return fmt.Errorf("Step %d uses the secretEnv %q more than once", i, se)
+				return fmt.Errorf("step %d uses the secretEnv %q more than once", i, se)
 			}
 			thisStepSecretEnvs[se] = struct{}{}
 		}
@@ -687,7 +687,7 @@ func checkVolumes(b *pb.Build) error {
 	// If global volumes are used, check if there are at least two steps.
 	if len(b.GetOptions().GetVolumes()) > 0 {
 		if len(b.GetSteps()) < 2 {
-			return fmt.Errorf("Global volumes defined but there are fewer than two steps")
+			return fmt.Errorf("global volumes defined but there are fewer than two steps")
 		}
 	}
 
@@ -732,7 +732,7 @@ func checkVolumes(b *pb.Build) error {
 
 	for volume, used := range volumesUsed {
 		if used < 2 {
-			return fmt.Errorf("Volume %q is only used by one step", volume)
+			return fmt.Errorf("volume %q is only used by one step", volume)
 		}
 	}
 

@@ -1051,11 +1051,11 @@ func processEnvVars(b *Build, step *pb.BuildStep) ([]string, error) {
 					kmsKeyName := sec.KmsKeyName
 					plaintext, err := kms.Decrypt(kmsKeyName, base64.StdEncoding.EncodeToString(val))
 					if err != nil {
-						return nil, fmt.Errorf("Failed to decrypt %q using key %q: %v", se, kmsKeyName, err)
+						return nil, fmt.Errorf("failed to decrypt %q using key %q: %v", se, kmsKeyName, err)
 					}
 					dec, err := base64.StdEncoding.DecodeString(plaintext)
 					if err != nil {
-						return nil, fmt.Errorf("Plaintext was not base64-decodeable: %v", err)
+						return nil, fmt.Errorf("plaintext was not base64-decodeable: %v", err)
 					}
 					if _, found := envVars[se]; !found {
 						secret := fmt.Sprintf("%s=%s", se, string(dec))

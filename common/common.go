@@ -69,7 +69,7 @@ func ParseSubstitutionsFlag(substitutions string) (map[string]string, error) {
 		// Limit the number of elements the string can split into to 2; this allows the substitution value string to contain the `=` character.
 		keyValue := strings.SplitN(s, "=", 2)
 		if len(keyValue) != 2 {
-			return substitutionsMap, fmt.Errorf("The substitution key value pair is not valid: %s", s)
+			return substitutionsMap, fmt.Errorf("the substitution key value pair is not valid: %s", s)
 		}
 		substitutionsMap[strings.TrimSpace(keyValue[0])] = strings.TrimSpace(keyValue[1])
 	}
@@ -153,7 +153,7 @@ func SubstituteAndValidate(b *pb.Build, substMap map[string]string) error {
 
 	// Do not accept built-in substitutions in the build config.
 	if err := validate.CheckSubstitutions(b.Substitutions); err != nil {
-		return fmt.Errorf("Error validating build's substitutions: %v", err)
+		return fmt.Errorf("error validating build's substitutions: %v", err)
 	}
 
 	if err := validate.CheckSubstitutionsLoose(substMap); err != nil {
@@ -168,17 +168,17 @@ func SubstituteAndValidate(b *pb.Build, substMap map[string]string) error {
 
 	// Validate the build.
 	if err := validate.CheckBuild(b); err != nil {
-		return fmt.Errorf("Error validating build: %v", err)
+		return fmt.Errorf("error validating build: %v", err)
 	}
 
 	// Apply substitutions.
 	if err := subst.SubstituteBuildFields(b); err != nil {
-		return fmt.Errorf("Error applying substitutions: %v", err)
+		return fmt.Errorf("error applying substitutions: %v", err)
 	}
 
 	// Validate the build after substitutions.
 	if err := validate.CheckBuildAfterSubstitutions(b); err != nil {
-		return fmt.Errorf("Error validating build after substitutions: %v", err)
+		return fmt.Errorf("error validating build after substitutions: %v", err)
 	}
 
 	return nil
